@@ -1,0 +1,12 @@
+elemtype: Namespace
+conname: Global
+contents:
+- libname: Base
+  elemtype: UsingDirective
+- elemtype: FunctionCall
+  funcName: print
+  arguments:
+  - '"Hello'
+  - World!"
+  isStandalone: true
+modifiers: []

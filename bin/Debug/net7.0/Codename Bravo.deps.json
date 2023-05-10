@@ -1,0 +1,73 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "Codename Bravo/1.0.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.3",
+          "SoapFormatter": "1.1.9",
+          "YamlDotNet": "13.1.0"
+        },
+        "runtime": {
+          "Codename Bravo.dll": {}
+        }
+      },
+      "Newtonsoft.Json/13.0.3": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.3.27908"
+          }
+        }
+      },
+      "SoapFormatter/1.1.9": {
+        "runtime": {
+          "lib/netstandard2.0/SoapFormatter.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.9.49678"
+          }
+        }
+      },
+      "YamlDotNet/13.1.0": {
+        "runtime": {
+          "lib/net7.0/YamlDotNet.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.1.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Codename Bravo/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Newtonsoft.Json/13.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ==",
+      "path": "newtonsoft.json/13.0.3",
+      "hashPath": "newtonsoft.json.13.0.3.nupkg.sha512"
+    },
+    "SoapFormatter/1.1.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9okRnHpuoOKlTlxid6sddSjZ0OVGbK4EjSf3VvxOLnQfTkV3iGZzSQa2ZYYuD+apairVrPqwZ3lPvcFqR8b7Kw==",
+      "path": "soapformatter/1.1.9",
+      "hashPath": "soapformatter.1.1.9.nupkg.sha512"
+    },
+    "YamlDotNet/13.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-S4tzJjofMDx8PKtbnwkaMznbPD1aUffVKW+ClhfOGAYFIPuY9sSrArcFQOcRkbwRP1kYIaMbXk4Vsnfk3dE3dQ==",
+      "path": "yamldotnet/13.1.0",
+      "hashPath": "yamldotnet.13.1.0.nupkg.sha512"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/bin/Debug/net7.0/Codename Bravo
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/bin/Debug/net7.0/Codename Bravo.deps.json
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/bin/Debug/net7.0/Codename Bravo.runtimeconfig.json
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/bin/Debug/net7.0/Codename Bravo.dll
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/bin/Debug/net7.0/Codename Bravo.pdb
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/Codename Bravo.csproj.AssemblyReference.cache
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/Codename Bravo.GeneratedMSBuildEditorConfig.editorconfig
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/Codename Bravo.AssemblyInfoInputs.cache
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/Codename Bravo.AssemblyInfo.cs
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/Codename Bravo.csproj.CoreCompileInputs.cache
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/Codename Bravo.dll
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/refint/Codename Bravo.dll
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/Codename Bravo.pdb
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/Codename Bravo.genruntimeconfig.cache
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/ref/Codename Bravo.dll
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/bin/Debug/net7.0/Newtonsoft.Json.dll
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/obj/Debug/net7.0/Codename Bravo.csproj.CopyComplete
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/bin/Debug/net7.0/SoapFormatter.dll
+/Users/alexjakubiak/Projects/Codename Bravo/Codename Bravo/bin/Debug/net7.0/YamlDotNet.dll

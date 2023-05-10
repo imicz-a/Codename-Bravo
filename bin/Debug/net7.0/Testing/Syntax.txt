@@ -1,0 +1,36 @@
+PRINCIPLES
+- fast
+- beautiful
+
+Therefore:
+- staticly typed
+- compiled
+- minimal syntax
+
+var variable = Type() //declaration of a variable
+var variable[] = {};
+
+Clone(bar) //Clones an object
+
+//this is a comment
+func bar(){
+    //some code
+}
+class foo{
+    //this is a class
+    public:
+    //all public vars
+    private:
+    //all private parts
+}
+
+//loops
+for i(0, < 10, 1){
+    //some code
+}
+while i < bar{
+    //some code
+}
+foreach i in array{
+
+}
