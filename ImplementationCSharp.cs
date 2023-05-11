@@ -35,6 +35,12 @@ namespace Train
                     return InterpretExternCall((ExternCall)elem);
                 case ASTElem.ElementType.UsingDirective:
                     return InterpretUsingDirective((UsingDirective)elem);
+				case ASTElem.ElementType.ForLoop:
+					return InterpretForLoop((ForLoop)elem);
+				case ASTElem.ElementType.WhileLoop:
+					return InterpretWhileLoop((WhileLoop)elem);
+				case ASTElem.ElementType.ForeachLoop:
+					return InterpretForeachLoop((ForeachLoop)elem);
                 default:
                     return "";
             }
@@ -162,6 +168,11 @@ namespace Train
         {
             return "using TrainBaseLib." + u.libname + ";";
         }
-    }
+		public string InterpretForLoop(ForLoop fl){
+			string code = "for(";
+			foreach(var i in fl.contents){
+				code += Interpret(i);
+			}
+    	}
 }
 
