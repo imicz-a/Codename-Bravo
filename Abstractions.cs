@@ -48,7 +48,8 @@ namespace Train
 	[Serializable]
 	public class ForLoop : Containter
 	{
-		public VarVar indexIterator;
+		public override ElementType elemtype { get; protected set; } = ElementType.ForLoop;
+        public VarVar indexIterator;
 		public int startval = 0;
 		public Tuple<Operation, Const> check = Tuple.Create(new Operation() { otype=Operation.operatorType.lessthan}, new Const());
 		public int step = 1;
@@ -56,16 +57,18 @@ namespace Train
 	[Serializable]
 	public class WhileLoop : Containter
 	{
-		public Tuple<Var, Operation, Var> args;
+		public override ElementType elemtype { get; protected set; } = ElementType.WhileLoop;
+		public LineOperation op;
 	}
 	[Serializable]
 	public class ForeachLoop : Containter
 	{
-		public VarVar iterationvar;
+		public override ElementType elemtype { get; protected set; } = ElementType.ForeachLoop;
+        public VarVar iterationvar;
 		public Var enumerable;
 	}
 	[Serializable]
-	class Return : ASTElem
+	public class Return : ASTElem
 	{
 		public Var value;
 		public string type;
@@ -127,7 +130,16 @@ namespace Train
 	{
         public override ElementType elemtype { get; protected set; } = ElementType.LineOperation;
 		public List<Operation> operations { get; set; } = new List<Operation>();
-	}
+        public override string ToString()
+        {
+			string str = "";
+            foreach(var o in operations)
+			{
+				str += o.ToString();
+			}
+			return str;
+        }
+    }
 	[Serializable]
 	public class Operation : ASTElem
 	{
@@ -147,12 +159,20 @@ namespace Train
 			equal
 		}
 		public operatorType otype { get; set; }
-	}
+        public override string ToString()
+        {
+			return operators[(int)otype];
+        }
+    }
 	[Serializable]
 	public class OperationVar : Operation
 	{
         public override ElementType elemtype { get; protected set; } = ElementType.OperationVar;
         public string varname { get; set; }
-	}
+        public override string ToString()
+        {
+			return varname;
+        }
+    }
 }
 

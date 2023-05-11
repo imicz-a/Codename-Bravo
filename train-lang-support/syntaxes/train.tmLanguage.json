@@ -1,0 +1,32 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "TRAIN",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.train",
+				"match": "\\b(if|while|for|return|foreach|func|var|extern|namespace|using|in)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.train",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.train",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.train"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "train-lang-support",
+  "displayName": "TRAIN lang support",
+  "description": "This package adds vscode support for Typesafe Rapid Adapdable Ideal Notation programming language, TRAIN in short. It adds syntax highlighting, auto compilation and more!",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.78.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "train",
+      "aliases": ["TRAIN", "train"],
+      "extensions": [".train",".tr",".bravo"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "train",
+      "scopeName": "source.train",
+      "path": "./syntaxes/train.tmLanguage.json"
+    }]
+  }
+}

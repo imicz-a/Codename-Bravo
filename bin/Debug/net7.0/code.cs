@@ -1,1 +1,3 @@
-using TrainBaseLib.Base;print("HelloWorld!");
+while(true){
+Console.WriteLine(i);
+}

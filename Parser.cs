@@ -30,8 +30,8 @@ namespace Train
                 currentline++;
             }
             var serializer = new YamlDotNet.Serialization.Serializer();
-            File.WriteAllText("ast.ast", "");
-            var tw = File.AppendText("ast.ast");
+            File.WriteAllText("ast.yaml", "");
+            var tw = File.AppendText("ast.yaml");
             serializer.Serialize(tw, globalNamespace);
             tw.Close();
             return globalNamespace;
@@ -87,13 +87,25 @@ namespace Train
                     elem = new UsingDirective() { libname = context[1] };
                     break;
                 case "for":
-                    elem = new ForLoop() { };
+                    elem = disectFor(context[1]);
+                    goin = true;
                     break;
                 case "}":
                     hierarchy.RemoveAt(current--);
                     Console.WriteLine("current " + current + " hierarchy count " + hierarchy.Count);
                     return;
                 default:
+                    if (context[0].StartsWith("while")){
+                        elem = disectWhile(context[0].Remove(0, 5));
+                        goin = true;
+                        break;
+                    }
+                    if (context[0].StartsWith("foreach"))
+                    {
+                        elem = disectForeach(context[0].Remove(0, 7));
+                        goin = true;
+                        break;
+                    }
                     if (context[0].EndsWith(")"))
                     {
                         elem = disectFunctionCall(context[0]);
@@ -102,7 +114,7 @@ namespace Train
                     }
                     if (lineContainsOperator(s))
                     {
-                        elem = disectOperation(context);
+                        elem = disectOperation(s);
                         break;
                     }
                     Program.Exit(new SyntaxError("Not an apropriate expression", currentline));
@@ -121,6 +133,37 @@ namespace Train
                 hierarchy.Add((Containter)elem);
             }
         }
+
+        static WhileLoop disectWhile(string arg)
+        {
+            if (arg.StartsWith(" "))
+            {
+                arg = arg.Remove(0, 1);
+            }
+            arg = arg.Remove(0, 1);
+            if (arg.EndsWith('{'))
+            {
+                arg = arg.Remove(arg.Length - 1, 1);
+            }
+            arg = arg.Remove(arg.Length-1, 1);
+            return new WhileLoop() { op = disectOperation(arg) };
+        }
+
+        static ForeachLoop disectForeach(string str)
+        {
+            ForeachLoop fl = new ForeachLoop();
+
+            string[] ctx = str.Split(' ');
+
+            fl.iterationvar = new VarVar() { varname = ctx[0] };
+            if(ctx[1] != "in")
+            {
+                Program.Exit(new SyntaxError("Well, this foreach statement has no 'in' keyword", currentline));
+            }
+            fl.enumerable = new VarVar() { varname = ctx[2] };
+            return fl;
+        }
+
         static bool lineContainsOperator(string str)
         {
             foreach(var f in Operation.operators)
@@ -174,6 +217,11 @@ namespace Train
             }
             return op;
         }
+        static LineOperation disectOperation(string str)
+        {
+            string[] ctx = str.Split(Operation.operators, StringSplitOptions.TrimEntries);
+            return disectOperation(ctx);
+        }
         static Tuple<string, List<dynamic>> interpretFunction(string str)
         {
             string[] strs = null;
@@ -209,6 +257,12 @@ namespace Train
         static ForLoop disectFor(string str)
         {
             var fl = new ForLoop();
+            str = str.Replace(" ", "");
+            if (str.EndsWith("{"))
+            {
+                str = str.Remove(str.Length - 1);
+            }
+            str = str.Remove(str.Length - 1);
             string[] strs = null;
             for (int i = 0; i < str.Length; i++)
             {
@@ -236,22 +290,69 @@ namespace Train
             switch (args.Length)
             {
                 case 0:
-                    Program.Exit(new SyntaxError("This is definitely not a for", currentline)); ;
+                    Program.Exit(new SyntaxError("This is definitely not a for", currentline));
                     break;
                 case 1:
-                    if (int.TryParse(args[0], out _))
-                        fl.check = Tuple.Create(new Operation() { otype = Operation.operatorType.lessthan}, new Const() { value = args[0]});
-                    else
-                    {
-
-                    }
+                    fl.check = getForCondition(args[0]);
                     break;
                 case 2:
-                    fl.check
+                    int start = 0;
+                    if (int.TryParse(args[0], out start))
+                    {
+                        fl.startval = start;
+                    }
+                    else
+                    {
+                        Program.Exit(new SyntaxError("Your start index of this for is not a number!", currentline));
+                        break;
+                    }
+                    fl.check = getForCondition(args[1]);
+                    break;
+                case 3:
+                    if (int.TryParse(args[0], out start))
+                    {
+                        fl.startval = start;
+                    }
+                    else
+                    {
+                        Program.Exit(new SyntaxError("Your start index of this for is not a number!", currentline));
+                        break;
+                    }
+                    fl.check = getForCondition(args[1]);
+                    int step = 0;
+                    if (int.TryParse(args[2], out step))
+                    {
+                        fl.step = step;
+                    }
+                    else
+                    {
+                        Program.Exit(new SyntaxError("Step of this for is not a number!", currentline));
+                        break;
+                    }
+                    break;
             }
             return fl;
         }
-
+        static Tuple<Operation, Const> getForCondition(string str)
+        {
+            if (int.TryParse(str, out _))
+                return Tuple.Create(new Operation() { otype = Operation.operatorType.lessthan }, new Const() { value = str });
+            else
+            {
+                char c = str[0];
+                if (Operation.operators.Contains(c.ToString()))
+                {
+                    return Tuple.Create(new Operation() { otype = (Operation.operatorType)Operation.operators.ToList().IndexOf(c.ToString()) }, new Const() { value = str.Substring(1, str.Length - 1) });
+                }
+                string s = str.Substring(0, 2);
+                if (Operation.operators.Contains(s))
+                {
+                    return Tuple.Create(new Operation() { otype = (Operation.operatorType)Operation.operators.ToList().IndexOf(s) }, new Const() { value = str.Substring(2, str.Length - 2) });
+                }
+            }
+            Program.Exit(new SyntaxError("this for loop is not viable", currentline));
+            return null;
+        }
         static Func disectFunction(string str)
         {
             if (str.EndsWith('{'))

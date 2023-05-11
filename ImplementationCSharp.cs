@@ -4,6 +4,7 @@ namespace Train
     public class ImplementationCSharp : IImplementation
     {
         public string LangName { get; set; } = "C#";
+        public uint indent = 0;
 
         public string Interpret(ASTElem elem)
         {
@@ -35,12 +36,12 @@ namespace Train
                     return InterpretExternCall((ExternCall)elem);
                 case ASTElem.ElementType.UsingDirective:
                     return InterpretUsingDirective((UsingDirective)elem);
-				case ASTElem.ElementType.ForLoop:
-					return InterpretForLoop((ForLoop)elem);
-				case ASTElem.ElementType.WhileLoop:
-					return InterpretWhileLoop((WhileLoop)elem);
-				case ASTElem.ElementType.ForeachLoop:
-					return InterpretForeachLoop((ForeachLoop)elem);
+                case ASTElem.ElementType.ForLoop:
+                    return InterpretForLoop((ForLoop)elem);
+                case ASTElem.ElementType.WhileLoop:
+                    return InterpretWhileLoop((WhileLoop)elem);
+                case ASTElem.ElementType.ForeachLoop:
+                    return InterpretForeachLoop((ForeachLoop)elem);
                 default:
                     return "";
             }
@@ -59,22 +60,22 @@ namespace Train
         public string InterpretFunc(Func f)
         {
             string code = "";
-            foreach(var m in f.modifiers)
+            foreach (var m in f.modifiers)
             {
                 code += m;
             }
             code += "void " + f.conname;
             code += "(";
-            foreach(var a in f.arguments)
+            foreach (var a in f.arguments)
             {
                 code += a.Item1;
                 code += " ";
                 code += a.Item2;
             }
             code += "){\n";
-            foreach(var c in f.contents)
+            foreach (var c in f.contents)
             {
-                code += Interpret(c); 
+                code += Interpret(c);
             }
             code += "}\n";
             return code;
@@ -84,7 +85,7 @@ namespace Train
         public string InterpretFunctionCalls(FunctionCall fc)
         {
             string code = fc.funcName + "(";
-            foreach(var i in fc.arguments)
+            foreach (var i in fc.arguments)
             {
                 code += i;
             }
@@ -110,7 +111,7 @@ namespace Train
         public string InterpretNamespace(Namespace n)
         {
             string code = "static class " + n.conname + "{\n";
-            foreach(var c in n.contents)
+            foreach (var c in n.contents)
             {
                 code += Interpret(c);
             }
@@ -144,8 +145,8 @@ namespace Train
         }
         string getStringType(Parser.vartype vartype, ASTElem assignment)
         {
-            string[] vartypes = new string[] { "int", "string", "bool", "char", "float"};
-            if((int)vartype < 6)
+            string[] vartypes = new string[] { "int", "string", "bool", "char", "float" };
+            if ((int)vartype < 6)
             {
                 return vartypes[(int)vartype];
             }
@@ -168,11 +169,42 @@ namespace Train
         {
             return "using TrainBaseLib." + u.libname + ";";
         }
-		public string InterpretForLoop(ForLoop fl){
-			string code = "for(";
-			foreach(var i in fl.contents){
-				code += Interpret(i);
-			}
-    	}
+        public string InterpretForLoop(ForLoop fl)
+        {
+            string code = "for(";
+            code += "int " + fl.indexIterator.varname + "=" + fl.startval + "; ";
+            code += fl.indexIterator.varname + Operation.operators[(uint)fl.check.Item1.otype] + fl.check.Item2.value + "; ";
+            code += fl.indexIterator.varname + "+=" + fl.step + "){\n";
+            foreach (var i in fl.contents)
+            {
+                code += Interpret(i) + "\n";
+            }
+            code += "}";
+            return code;
+        }
+
+        public string InterpretWhileLoop(WhileLoop wl)
+        {
+            string code = "while(";
+            code += wl.op.ToString();
+            code += "){\n";
+            foreach(var v in wl.contents)
+            {
+                code += Interpret(v) + '\n';
+            }
+            code += "}\n";
+            return code;
+        }
+
+        public string InterpretForeachLoop(ForeachLoop fl)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string InterpretReturn(Return r)
+        {
+            return "return " + r.value; 
+        }
+    }
 }
 

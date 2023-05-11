@@ -10,9 +10,9 @@ namespace Train
     {
         public static void Compile()
         {
-            CompileWithPath("/Users/alexjakubiak/Codename Bravo/test.bravo", "/Users/alexjakubiak/Codename Bravo/test.cs", false);
+            CompileWithPath("test.train", "code.cs", new ImplementationCSharp());
         }
-        static void CompileWithPath(string path, string outpath, bool cpp)
+        static void CompileWithPath(string path, string outpath, IImplementation implementation)
         {
             string[] args = Environment.GetCommandLineArgs();
 
@@ -20,9 +20,8 @@ namespace Train
             File.WriteAllText(outpath, "");
 
             Namespace global = Parser.CreateAST(enumerator);
-            var imp = new ImplementationCSharp();
-            string code = imp.ConvertGlobalNamespace(global);
-            File.WriteAllText("code.cs", code);
+            string code = implementation.ConvertGlobalNamespace(global);
+            File.WriteAllText(outpath, code);
         }
         public static void Exit(exception x)
         {
