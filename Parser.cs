@@ -87,7 +87,8 @@ namespace Train
                     elem = new UsingDirective() { libname = context[1] };
                     break;
                 case "for":
-
+                    elem = new ForLoop() { };
+                    break;
                 case "}":
                     hierarchy.RemoveAt(current--);
                     Console.WriteLine("current " + current + " hierarchy count " + hierarchy.Count);
@@ -205,9 +206,49 @@ namespace Train
             return Tuple.Create(strs[0], arguments);
         }
 
-        static ForLoop disectFor()
+        static ForLoop disectFor(string str)
         {
             var fl = new ForLoop();
+            string[] strs = null;
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == '(')
+                {
+                    strs = new string[2];
+                    strs[0] = str.Substring(0, i);
+                    strs[1] = str.Substring(i + 1, str.Length - i - 2);
+                    Console.WriteLine("0 " + strs[0]);
+                    Console.WriteLine("1 " + strs[1]);
+                    break;
+                }
+            }
+            if (strs == null)
+            {
+                Program.Exit(new SyntaxError("That is definitely not a for", currentline));
+            }
+            fl.indexIterator = new VarVar() { varname = strs[0] };
+            strs[1].Remove(strs[1].Length - 1);
+            string[] args = disectArguments(strs[1]);
+            if(args.Length > 3)
+            {
+                Program.Exit(new SyntaxError("This is definitely not a for", currentline));
+            }
+            switch (args.Length)
+            {
+                case 0:
+                    Program.Exit(new SyntaxError("This is definitely not a for", currentline)); ;
+                    break;
+                case 1:
+                    if (int.TryParse(args[0], out _))
+                        fl.check = Tuple.Create(new Operation() { otype = Operation.operatorType.lessthan}, new Const() { value = args[0]});
+                    else
+                    {
+
+                    }
+                    break;
+                case 2:
+                    fl.check
+            }
             return fl;
         }
 
