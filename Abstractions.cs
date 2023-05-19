@@ -26,7 +26,8 @@ namespace Train
 			ForLoop,
 			WhileLoop,
 			ForeachLoop,
-			ReturnStatement
+			ReturnStatement,
+      Class
 		}
         public virtual ElementType elemtype{ get; protected set; }
     }
@@ -104,7 +105,12 @@ namespace Train
 	{
         public override ElementType elemtype { get; protected set; } = ElementType.Const;
         public string value { get; set; }
-	}
+    }
+  [Serializable]
+  public class Class : Container
+  {
+        public override ElementType elemtype {get; protected set;} =  ElementType.Class;
+  }
 	[Serializable]
 	public class Containter : ASTElem
 	{

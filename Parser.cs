@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
@@ -93,6 +93,9 @@ namespace Train
                     hierarchy.RemoveAt(current--);
                     Console.WriteLine("current " + current + " hierarchy count " + hierarchy.Count);
                     return;
+                case "class":
+                    
+                  break;
                 default:
                     if (context[0].StartsWith("while")){
                         elem = disectWhile(context[0].Remove(0, 5));
