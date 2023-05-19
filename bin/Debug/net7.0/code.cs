@@ -1,3 +1,1 @@
-while(true){
-Console.WriteLine(i);
-}
+foreach(var i in array){    i ++;}

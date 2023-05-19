@@ -8,14 +8,16 @@ namespace Train
 {
     static class Program
     {
+        static Dictionary<string, IImplementation> implementations = new Dictionary<string, IImplementation>() { {"csharp", new ImplementationCSharp()}, {"cpp", new ImplementationCPlusPlus() } };
         public static void Compile()
         {
-            CompileWithPath("test.train", "code.cs", new ImplementationCSharp());
+            Args args = getArgs();
+            Console.WriteLine(args.inputPath);
+            CompileWithPath(args.inputPath, args.outputPath, implementations[args.translateLang]);
+
         }
         static void CompileWithPath(string path, string outpath, IImplementation implementation)
         {
-            string[] args = Environment.GetCommandLineArgs();
-
             IEnumerable<string> enumerator = File.ReadLines(path);
             File.WriteAllText(outpath, "");
 
@@ -28,5 +30,38 @@ namespace Train
             Console.WriteLine(x);
             Environment.Exit(1);
         }
+        static Args getArgs()
+        {
+            Args aargs = new Args();
+            string[] args = Environment.GetCommandLineArgs();
+            string prevarg = "i";
+            foreach(var arg in args)
+            {
+                if (arg.StartsWith('-'))
+                {
+                    prevarg = arg.Replace("-", "");
+                    continue;
+                }
+                switch (prevarg)
+                {
+                    case "i":
+                        aargs.inputPath = arg;
+                        break;
+                    case "o":
+                        aargs.outputPath = arg;
+                        break;
+                    case "lang":
+                        aargs.translateLang = arg;
+                        break;
+                }
+            }
+            return aargs;
+        }
+    }
+    class Args
+    {
+        public string inputPath { get; set; } = "a.train";
+        public string outputPath { get; set; } = "a.o";
+        public string translateLang { get; set; } = "csharp";
     }
 }

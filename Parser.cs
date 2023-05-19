@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Train
 {
@@ -39,10 +40,8 @@ namespace Train
         
         static void Interpret(string s)
         {
-            if (s == "")
-            {
+            if (isOnlyWhitespace(s))
                 return;
-            }
             string[] context = disectContext(s);
             foreach(var i in context)
             {
@@ -134,6 +133,19 @@ namespace Train
             }
         }
 
+        static bool isOnlyWhitespace(string str)
+        {
+            for(int i = 0; i < str.Length; i++)
+            {
+                if (str[i] == ' ' || str[i] == '\t')
+                {
+                    continue;
+                }
+                return false;
+            }
+            return true;
+        }
+
         static WhileLoop disectWhile(string arg)
         {
             if (arg.StartsWith(" "))
@@ -152,6 +164,11 @@ namespace Train
         static ForeachLoop disectForeach(string str)
         {
             ForeachLoop fl = new ForeachLoop();
+
+            if(str.EndsWith("{"))
+                str = str.Remove(str.Length - 1);
+            str = str.Remove(0, 1);
+            str = str.Remove(str.Length - 1);
 
             string[] ctx = str.Split(' ');
 
@@ -219,8 +236,32 @@ namespace Train
         }
         static LineOperation disectOperation(string str)
         {
-            string[] ctx = str.Split(Operation.operators, StringSplitOptions.TrimEntries);
-            return disectOperation(ctx);
+            List<string> ctx = new();
+            int previndex = 0;
+            for (int i = 0; i < str.Length; i++)
+            {
+                Operation.operatorType operatorType;
+                if (isOperatorAfterIndex(i, str, out operatorType))
+                {
+                    ctx.Add()
+                }
+            }
+            return disectOperation(ctx.ToArray());
+        }
+        static bool isOperatorAfterIndex(int index, string str, out Operation.operatorType ty) 
+        {
+            foreach(var o in Operation.operators)
+            {
+                if (index + o.Length >= str.Length)
+                    continue;
+                if(str.Substring(index+1, o.Length) == o)
+                {
+                    ty = (Operation.operatorType)Operation.operators.ToList().IndexOf(o);
+                    return true;
+                }
+            }
+            ty = Operation.operatorType.equal;
+            return false;
         }
         static Tuple<string, List<dynamic>> interpretFunction(string str)
         {
@@ -494,6 +535,10 @@ namespace Train
                 isPrevCharBackslash = false;
             }
             ctx.Add(str.Substring(previousindex + 1, str.Length - previousindex - 1));
+            foreach(var i in ctx)
+            {
+                Console.WriteLine("ctx " + i);
+            }
             int startindex = 0;
             for (int i = 0; i < ctx.Count; i++)
             {

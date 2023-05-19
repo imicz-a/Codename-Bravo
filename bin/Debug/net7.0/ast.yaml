@@ -1,16 +1,21 @@
 elemtype: Namespace
 conname: Global
 contents:
-- op:
-    elemtype: LineOperation
-    operations:
-    - elemtype: OperationVar
-      varname: true
-      otype: assignment
-  elemtype: WhileLoop
+- iterationvar:
+    elemtype: VarVar
+    varname: i
+    value: 
+  enumerable:
+    elemtype: VarVar
+    varname: array
+    value: 
+  elemtype: ForeachLoop
   conname: 
   contents:
-  - elemtype: ExternCall
-    content: Console.WriteLine(i)
+  - elemtype: LineOperation
+    operations:
+    - elemtype: OperationVar
+      varname: '    i ++'
+      otype: assignment
   modifiers: []
 modifiers: []

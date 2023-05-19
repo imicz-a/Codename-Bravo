@@ -198,7 +198,14 @@ namespace Train
 
         public string InterpretForeachLoop(ForeachLoop fl)
         {
-            throw new NotImplementedException();
+            string code = "foreach(";
+            code += "var " + fl.iterationvar.varname + " in " + Interpret(fl.enumerable) + "){";
+            foreach(var c in fl.contents)
+            {
+                code += Interpret(c);
+            }
+            code += "}";
+            return code;
         }
 
         public string InterpretReturn(Return r)
