@@ -1,21 +1,6 @@
 elemtype: Namespace
 conname: Global
 contents:
-- iterationvar:
-    elemtype: VarVar
-    varname: i
-    value: 
-  enumerable:
-    elemtype: VarVar
-    varname: array
-    value: 
-  elemtype: ForeachLoop
-  conname: 
-  contents:
-  - elemtype: LineOperation
-    operations:
-    - elemtype: OperationVar
-      varname: '    i ++'
-      otype: assignment
-  modifiers: []
+- libname: cmath
+  elemtype: UsingDirective
 modifiers: []

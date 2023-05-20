@@ -27,7 +27,8 @@ namespace Train
 			WhileLoop,
 			ForeachLoop,
 			ReturnStatement,
-      Class
+			Pointer,
+			Class
 		}
         public virtual ElementType elemtype{ get; protected set; }
     }
@@ -38,9 +39,18 @@ namespace Train
 		public override ElementType elemtype { get; protected set; } = ElementType.VarDeclaration;
         public string varname { get; set; }
 		public ASTElem assignment { get; set; }
-		public Parser.vartype type { get; set; }
+		public bool isPointer { get; set; }
+		public string type { get; set; }
 	}
-	[Serializable]
+    [Serializable]
+    public class Declaration : ASTElem
+    {
+        public override ElementType elemtype { get; protected set; } = ElementType.VarDeclaration;
+        public string varname { get; set; }
+        public ASTElem assignment { get; set; }
+        public Parser.vartype type { get; set; }
+    }
+    [Serializable]
 	public class UsingDirective : ASTElem
 	{
 		public override ElementType elemtype { get; protected set; } = ElementType.UsingDirective;
@@ -94,11 +104,15 @@ namespace Train
         public override ElementType elemtype { get; protected set; } = ElementType.Var;
     }
 	[Serializable]
+	public class Pointer : VarVar
+	{
+        public override ElementType elemtype { get; protected set; } = ElementType.Pointer;
+    }
+	[Serializable]
 	public class VarVar : Var
 	{
         public override ElementType elemtype { get; protected set; } = ElementType.VarVar;
         public string varname { get; set; }
-		public string value { get; set; }
 	}
 	[Serializable]
 	public class Const : Var
@@ -107,7 +121,7 @@ namespace Train
         public string value { get; set; }
     }
   [Serializable]
-  public class Class : Container
+  public class Class : Containter
   {
         public override ElementType elemtype {get; protected set;} =  ElementType.Class;
   }
@@ -150,20 +164,20 @@ namespace Train
 	public class Operation : ASTElem
 	{
         public override ElementType elemtype { get; protected set; } = ElementType.Operation;
-        public static string[] operators = new string[] { "=", "+", "-", "+=", "--", "<", "<=", ">", ">=", "==" };
+        public static string[] operators = new string[] { "+=", "--", "<=", ">=", "==", "<", "=", "+", "-", ">"};
 		public enum operatorType
 		{
-			assignment,
-			plus,
-			minus,
 			increment,
 			decrement,
-			lessthan,
 			lessequalthan,
-			morethan,
 			moreequalthan,
-			equal
-		}
+			equal,
+            lessthan,
+            assignment,
+            plus,
+            minus,
+            morethan,
+        }
 		public operatorType otype { get; set; }
         public override string ToString()
         {

@@ -10,20 +10,7 @@ namespace Train
         static Namespace globalNamespace = new Namespace() { conname = "Global", contents=new List<ASTElem>()};
         static ushort current = 0;
         static List<Containter> hierarchy = new List<Containter>() { globalNamespace};
-        public enum vartype
-        {
-            Int,
-            String,
-            Bool,
-            Char,
-            Float,
-            Array,
-            Enum,
-            Struct,
-            Class,
-            Delegate
-        }
-        public static Namespace CreateAST(IEnumerable<string> text)
+        public static Namespace CreateAST(List<string> text)
         {
             foreach (string i in text)
             {
@@ -94,8 +81,8 @@ namespace Train
                     Console.WriteLine("current " + current + " hierarchy count " + hierarchy.Count);
                     return;
                 case "class":
-                    
-                  break;
+                    goin = true;
+                    break;
                 default:
                     if (context[0].StartsWith("while")){
                         elem = disectWhile(context[0].Remove(0, 5));
@@ -114,11 +101,44 @@ namespace Train
                         ((FunctionCall)elem).isStandalone = true;
                         break;
                     }
-                    if (lineContainsOperator(s))
+                    if (isTypeName(context[0]))
                     {
-                        elem = disectOperation(s);
+                        if (context[1] == "ptr")
+                        {
+                            elem = new VarDeclaration() { varname = context[2]};
+                            break;
+                        }
+                        elem = new VarDeclaration();
+                        ((VarDeclaration)elem).type = context[0];
+                        ((VarDeclaration)elem).varname = context[1];
+
+                        if (isFunction(context[3]))
+                        {
+                            var v = disectFunctionCall(context[3]);
+
+                            ((VarDeclaration)elem).assignment = v;
+                        }
+                        else
+                        {
+                            ((VarDeclaration)elem).type = getType(context[3]);
+                            var v = new Const
+                            {
+                                value = context[3]
+                            };
+                            ((VarDeclaration)elem).assignment = v;
+                        }
+                        if (context[2] != "=")
+                        {
+                            Program.Exit(new SyntaxError("no it won't compile, not pretty enough", currentline));
+                        }
                         break;
                     }
+                    if (lineContainsOperator(s))
+                    {
+                        elem = disectOperation(context);
+                        break;
+                    }
+                    
                     Program.Exit(new SyntaxError("Not an apropriate expression", currentline));
                     break;
 
@@ -134,6 +154,13 @@ namespace Train
                 current++;
                 hierarchy.Add((Containter)elem);
             }
+        }
+
+        static bool isTypeName(string str)
+        {
+            if (Checker.types.Contains(str))
+                return true;
+            return false;
         }
 
         static bool isOnlyWhitespace(string str)
@@ -196,29 +223,29 @@ namespace Train
             return false;
         }
 
-        static vartype getType(string var)
+        static string getType(string var)
         {
             if (var.Contains("\""))
             {
-                return vartype.String;
+                return "string";
             }
             if (var.Contains("'"))
             {
-                return vartype.Char;
+                return "char";
             }
             if(var == "true" || var == "false")
             {
-                return vartype.Bool;
+                return "bool";
             }
             if (int.TryParse(var, out _))
             {
-                return vartype.Int;
+                return "int";
             }
             if(double.TryParse(var, out _))
             {
-                return vartype.Float;
+                return "float";
             }
-            return vartype.Class;
+            return "not applicable";
         }
 
         static LineOperation disectOperation(string[] ctx)
@@ -240,20 +267,31 @@ namespace Train
         static LineOperation disectOperation(string str)
         {
             List<string> ctx = new();
+            int indentNum = 0;
+            while (str[indentNum] == ' ' || str[indentNum] == '\t')
+            {
+                indentNum++;
+            }
+            str = str.Substring(indentNum, str.Length - indentNum);
             int previndex = 0;
             for (int i = 0; i < str.Length; i++)
             {
                 Operation.operatorType operatorType;
                 if (isOperatorAfterIndex(i, str, out operatorType))
                 {
-                    ctx.Add()
+                    Console.WriteLine(i);
+                    ctx.Add(str.Substring(previndex, i-previndex));
+                    previndex = i + Operation.operators[(int)operatorType].Length+1;
+                    i += Operation.operators[(int)operatorType].Length;
+                    ctx.Add(Operation.operators[(int)operatorType]);
                 }
             }
+            ctx.Add(str.Substring(previndex, str.Length-previndex));
             return disectOperation(ctx.ToArray());
         }
         static bool isOperatorAfterIndex(int index, string str, out Operation.operatorType ty) 
         {
-            foreach(var o in Operation.operators)
+            foreach (var o in Operation.operators)
             {
                 if (index + o.Length >= str.Length)
                     continue;

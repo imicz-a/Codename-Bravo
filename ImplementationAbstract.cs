@@ -55,7 +55,8 @@ namespace Train
 		string InterpretWhileLoop(WhileLoop wl);
 		string InterpretForeachLoop(ForeachLoop fl);
 		string InterpretReturn(Return r);
-		string ConvertGlobalNamespace(Namespace global);
+		string ConvertGlobalNamespace(Namespace global, string filename);
+		void getAllTypes(TrainProject proj);
 	}
 }
 

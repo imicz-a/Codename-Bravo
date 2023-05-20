@@ -136,27 +136,18 @@ namespace Train
 
         public string InterpretVarDeclaration(VarDeclaration vd)
         {
-            return getStringType(vd.type, vd.assignment) + " " + vd.varname + " = " + Interpret(vd.assignment) + ";\n";
+            return vd.type + " " + vd.varname + " = " + Interpret(vd.assignment) + ";\n";
         }
 
         public string InterpretVarVar(VarVar vv)
         {
             return vv.varname;
         }
-        string getStringType(Parser.vartype vartype, ASTElem assignment)
-        {
-            string[] vartypes = new string[] { "int", "string", "bool", "char", "float" };
-            if ((int)vartype < 6)
-            {
-                return vartypes[(int)vartype];
-            }
-            return "var";
-        }
         public string InterpretExternCall(ExternCall ex)
         {
             return ex.content + ";";
         }
-        public string ConvertGlobalNamespace(Namespace global)
+        public string ConvertGlobalNamespace(Namespace global, string filename)
         {
             string code = "";
             foreach (var c in global.contents)
@@ -211,6 +202,31 @@ namespace Train
         public string InterpretReturn(Return r)
         {
             return "return " + r.value; 
+        }
+        public void getAllTypes(TrainProject proj)
+        {
+            foreach (var src in proj.sourceFiles)
+            {
+                string[] lines = File.ReadAllLines(src);
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                foreach (var asm in assemblies)
+                {
+                    var types = asm.GetTypes();
+                    foreach (var t in types)
+                    {
+                        Checker.types.Add(t.Name);
+                    }
+                }
+                foreach (var v in lines)
+                {
+                    if (v.StartsWith("class "))
+                    {
+                        if (v.EndsWith("{"))
+                            v.Remove(v.Length - 1, 1);
+                        Checker.types.Add(v.Split()[1]);
+                    }
+                }
+            }
         }
     }
 }

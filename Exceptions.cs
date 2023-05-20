@@ -1,5 +1,4 @@
-﻿
-namespace Train
+﻿namespace Train
 {
     abstract class exception
     {
