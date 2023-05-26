@@ -81,7 +81,18 @@ namespace Train
                     Console.WriteLine("current " + current + " hierarchy count " + hierarchy.Count);
                     return;
                 case "class":
+                    elem = new Class() { conname = context[1] };
                     goin = true;
+                    break;
+                case "namespace":
+                    elem = new Namespace()
+                    {
+                        conname = context[1]
+                    };
+                    goin = true;
+                    break;
+                case "return":
+                    elem = new Return();
                     break;
                 default:
                     if (context[0].StartsWith("while")){
@@ -155,8 +166,7 @@ namespace Train
                 hierarchy.Add((Containter)elem);
             }
         }
-
-        static bool isTypeName(string str)
+        public static bool isTypeName(string str)
         {
             if (Checker.types.Contains(str))
                 return true;
@@ -494,7 +504,7 @@ namespace Train
             return fcall;
         }
 
-        static bool isFunction(string s)
+        public static bool isFunction(string s)
         {
             bool hasNawias = false;
             for (int i = 0; i < s.Length; i++)
@@ -603,7 +613,7 @@ namespace Train
             }
             return buffer.ToArray();
         }
-        static string[] disectContext(string str)
+        public static string[] disectContext(string str)
         {
             str = "y" + str;
             byte exitcharcount = 0;
